@@ -27,11 +27,14 @@ class BuildInfoPlugin implements Plugin<Project> {
         buildInfoFile
     }
 
-    private static Map<String, String> generateBuildInfoFile(Project project) {
+    private static Map<String, Object> generateBuildInfoFile(Project project) {
 
         def buildInfo = [
             'buildinfo.version': '1.0-SNAPSHOT',
-            'name': project.name
+            'name': project.name,
+            'group-id': project.group,
+            'artifact-id': project.name,
+            'version': project.version
         ]
 
         buildInfo
