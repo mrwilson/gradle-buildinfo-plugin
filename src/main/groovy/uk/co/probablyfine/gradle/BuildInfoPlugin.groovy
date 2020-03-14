@@ -53,7 +53,6 @@ class BuildInfoPlugin implements Plugin<Project> {
             'os.name': System.getProperty("os.name")
         ]
 
-
         def artifacts = project.jar.outputs.files.getFiles()
             .sort { it.name }
             .withIndex()
@@ -61,8 +60,10 @@ class BuildInfoPlugin implements Plugin<Project> {
                 [
                     "outputs.${i}.filename": entry.name,
                     "outputs.${i}.length": entry.length(),
+                    "outputs.${i}.checksums.md5": calculateHash(entry, 'MD5'),
+                    "outputs.${i}.checksums.sha1": calculateHash(entry, 'SHA1'),
                     "outputs.${i}.checksums.sha256": calculateHash(entry, 'SHA-256'),
-                    "outputs.${i}.checksums.sha512": calculateHash(entry, 'SHA-512')
+                    "outputs.${i}.checksums.sha512": calculateHash(entry, 'SHA-512'),
                 ]
             }
 
