@@ -21,7 +21,6 @@ class BuildInfoPlugin implements Plugin<Project> {
                 buildInfoFile << "\n"
             }
 
-
         }
     }
 
