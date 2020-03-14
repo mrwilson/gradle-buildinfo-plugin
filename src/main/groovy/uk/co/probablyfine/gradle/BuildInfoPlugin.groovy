@@ -44,9 +44,16 @@ class BuildInfoPlugin implements Plugin<Project> {
             'version': project.version
         ]
 
+        def environment = [
+            'java.version': System.getProperty("java.version"),
+            'java.vendor': System.getProperty("java.vendor"),
+            'os.name': System.getProperty("os.name")
+        ]
+
         [
             header,
-            buildInfo
+            buildInfo,
+            environment
         ]
     }
 }
