@@ -12,8 +12,13 @@ class BuildInfoPlugin implements Plugin<Project> {
 
             File buildInfoFile = createBuildInfoFile(project)
 
-            generateBuildInfoFile(project).each { key, value ->
-                buildInfoFile << "${key}=${value}\n"
+            generateBuildInfoFile(project).each { block ->
+                block.each { key, value ->
+                    buildInfoFile << "${key}=${value}"
+                    buildInfoFile << "\n"
+                }
+
+                buildInfoFile << "\n"
             }
 
 
@@ -27,16 +32,22 @@ class BuildInfoPlugin implements Plugin<Project> {
         buildInfoFile
     }
 
-    private static Map<String, Object> generateBuildInfoFile(Project project) {
+    private static List<Map<String, Object>> generateBuildInfoFile(Project project) {
+
+        def header = [
+            'buildinfo.version': '1.0-SNAPSHOT'
+        ]
 
         def buildInfo = [
-            'buildinfo.version': '1.0-SNAPSHOT',
             'name': project.name,
             'group-id': project.group,
             'artifact-id': project.name,
             'version': project.version
         ]
 
-        buildInfo
+        [
+            header,
+            buildInfo
+        ]
     }
 }
