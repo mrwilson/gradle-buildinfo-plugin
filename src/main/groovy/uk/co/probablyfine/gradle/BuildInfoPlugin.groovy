@@ -3,6 +3,9 @@ package uk.co.probablyfine.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+import java.security.DigestInputStream
+import java.security.MessageDigest
+
 class BuildInfoPlugin implements Plugin<Project> {
 
     @Override
@@ -50,10 +53,28 @@ class BuildInfoPlugin implements Plugin<Project> {
             'os.name': System.getProperty("os.name")
         ]
 
-        [
-            header,
-            buildInfo,
-            environment
-        ]
+
+        def artifacts = project.jar.outputs.files.getFiles()
+            .sort { it.name }
+            .withIndex()
+            .collect { File entry, int i ->
+                [
+                    "outputs.${i}.filename": entry.name,
+                    "outputs.${i}.length": entry.length(),
+                    "outputs.${i}.checksums.sha256": calculateHash(entry, 'SHA-256'),
+                    "outputs.${i}.checksums.sha512": calculateHash(entry, 'SHA-512')
+                ]
+            }
+
+        [ header, buildInfo, environment ] + artifacts
+    }
+
+    static def calculateHash(File file, String algorithm) {
+        file.withInputStream {
+            new DigestInputStream(it, MessageDigest.getInstance(algorithm)).withStream {
+                it.eachByte {}
+                it.messageDigest.digest().encodeHex() as String
+            }
+        }
     }
 }
