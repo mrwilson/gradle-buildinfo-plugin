@@ -51,8 +51,9 @@ class BuildInfoPlugin implements Plugin<Project> {
             'os.name': System.getProperty("os.name")
         ]
 
-        def artifacts = project.jar.outputs.files.getFiles()
+        def artifacts = project.configurations.archives.allArtifacts
             .sort { it.name }
+            .collect { it.file }
             .withIndex()
             .collect { File entry, int i ->
                 [
