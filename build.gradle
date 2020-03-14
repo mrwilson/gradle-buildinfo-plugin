@@ -18,6 +18,11 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
 pluginBundle {
     website = 'https://github.com/mrwilson/gradle-buildinfo-plugin'
     vcsUrl = 'https://github.com/mrwilson/gradle-buildinfo-plugin'
