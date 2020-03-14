@@ -9,9 +9,8 @@ class BuildInfoPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         project.tasks.create('generateBuildInfo') {
-            File buildInfoFile = new File("${project.name}.buildinfo")
 
-            buildInfoFile.delete()
+            File buildInfoFile = createBuildInfoFile(project)
 
             generateBuildInfoFile(project).each { key, value ->
                 buildInfoFile << "${key}=${value}\n"
@@ -21,7 +20,14 @@ class BuildInfoPlugin implements Plugin<Project> {
         }
     }
 
-    static Map<String, String> generateBuildInfoFile(Project project) {
+    private static File createBuildInfoFile(Project project) {
+        File buildInfoFile = new File("${project.name}.buildinfo")
+
+        buildInfoFile.delete()
+        buildInfoFile
+    }
+
+    private static Map<String, String> generateBuildInfoFile(Project project) {
 
         def buildInfo = [
             'buildinfo.version': '1.0-SNAPSHOT',
