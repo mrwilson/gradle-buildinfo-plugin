@@ -10,20 +10,17 @@ class BuildInfoPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.afterEvaluate {
 
-            project.tasks.create('generateBuildInfo') {
+        project.task('generateBuildInfo').doLast {
+            File buildInfoFile = createBuildInfoFile(project)
 
-                File buildInfoFile = createBuildInfoFile(project)
-
-                buildInformation(project).each { section ->
-                    section.each { key, value ->
-                        buildInfoFile << "${key}=${value}"
-                        buildInfoFile << "\n"
-                    }
-
+            buildInformation(project).each { section ->
+                section.each { key, value ->
+                    buildInfoFile << "${key}=${value}"
                     buildInfoFile << "\n"
                 }
+
+                buildInfoFile << "\n"
             }
         }
     }
